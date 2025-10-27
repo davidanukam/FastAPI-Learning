@@ -12,13 +12,20 @@ class Priority(IntEnum):
     HIGH = 1
 
 class TaskBase(BaseModel):
-    task_id: int
     task_name: str = Field(..., min_length=3, max_length=512, description='Name of task')
     task_description: str = Field(..., description='Description of the task')
     priority: Priority = Field(default=Priority.LOW, description='Priority of the task')
 
 class TaskCreate(TaskBase):
     pass
+
+class Task(TaskBase):
+    task_id: int
+
+class TaskUpdate(BaseModel):
+    task_name: Optional[str] = Field(None, min_length=3, max_length=512, description='Name of task')
+    task_description: Optional[str] = Field(None, description='Description of the task')
+    priority: Optional[Priority] = Field(None, description='Priority of the task')
 
 all_tasks = [
     {'task_id' : 1, 'task_name': 'Sports', 'task_description': 'Go to the gym'},
