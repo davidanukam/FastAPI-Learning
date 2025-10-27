@@ -2,7 +2,7 @@ from enum import IntEnum
 from typing import List, Optional
 from pydantic import BaseModel, Field
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 
 app = FastAPI()
 
@@ -48,6 +48,7 @@ def get_task(task_id: int):
     for task in all_tasks:
         if task.task_id == task_id:
             return task
+    raise HTTPException(status_code=404, detail='Task not found')
 
 @app.post("/tasks", response_model=Task)
 def create_task(task: TaskCreate):
@@ -62,11 +63,14 @@ def create_task(task: TaskCreate):
 def update_task(task_id: int, updated_task: TaskUpdate):
     for task in all_tasks:
         if task.task_id == task_id:
-            task.task_name = updated_task.task_name
-            task.task_description = updated_task.task_description
-            task.priority = updated_task.priority
+            if updated_task.task_name is not None:
+                task.task_name = updated_task.task_name
+            if updated_task.task_description is not None:
+                task.task_description = updated_task.task_description
+            if updated_task.priority is not None:
+                task.priority = updated_task.priority
             return task
-    return "Error, not found"
+    raise HTTPException(status_code=404, detail='Task not found')
 
 @app.delete("/tasks/{task_id}", response_model=Task)
 def delete_task(task_id: int):
@@ -80,4 +84,4 @@ def delete_task(task_id: int):
             if task.task_id > task_id:
                 task.task_id -= 1
         return deleted_task
-    return "Error, not found"
+    raise HTTPException(status_code=404, detail='Task not found')
