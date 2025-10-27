@@ -20,7 +20,7 @@ class TaskCreate(TaskBase):
     pass
 
 class Task(TaskBase):
-    task_id: int
+    task_id: int = Field(..., description='Unique identifier of the task')
 
 class TaskUpdate(BaseModel):
     task_name: Optional[str] = Field(None, min_length=3, max_length=512, description='Name of task')
@@ -28,11 +28,11 @@ class TaskUpdate(BaseModel):
     priority: Optional[Priority] = Field(None, description='Priority of the task')
 
 all_tasks = [
-    {'task_id' : 1, 'task_name': 'Sports', 'task_description': 'Go to the gym'},
-    {'task_id' : 2, 'task_name': 'Read', 'task_description': 'Read 10 pages'},
-    {'task_id' : 3, 'task_name': 'Shop', 'task_description': 'Go shopping'},
-    {'task_id' : 4, 'task_name': 'Study', 'task_description': 'Study for exams'},
-    {'task_id' : 5, 'task_name': 'Meditate', 'task_description': 'Meditate for 30 minutes'},
+    Task(task_id=1, task_name="Sports", task_description="Go to the gym", priority=Priority.MEDIUM),
+    Task(task_id=2, task_name="Read", task_description="Read 10 pages", priority=Priority.LOW),
+    Task(task_id=3, task_name="Shop", task_description="Go shopping", priority=Priority.HIGH),
+    Task(task_id=4, task_name="Study", task_description="Study for exams'", priority=Priority.HIGH),
+    Task(task_id=5, task_name="Meditate", task_description="Meditate for 30 minutes", priority=Priority.MEDIUM),
 ]
 
 @app.get("/")
